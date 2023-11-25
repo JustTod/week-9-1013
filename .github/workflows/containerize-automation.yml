@@ -37,7 +37,10 @@ jobs:
         run: ${{ secrets.KUBE_CONFIG }}
       - name: Modify Manifest
         run: |
-          echo ${{ github.base_ref }}
+          echo "${{ github.base_ref }}"
+          echo "${{ github_base_ref }}"
+          echo "$github_base_ref"
+          echo "$github.base_ref"
           export NAME_WITH_TAG=${{ env.IMAGE_NAME }}:${{ GITHUB.SHA }}
           export BRANCH_NAME=${{ github.base_ref }}
           yq -i '.spec.template.spec.containers[0].image=strenv(NAME_WITH_TAG)' ./manifest/strenv(BRANCH_NAME)/deployment.yaml
