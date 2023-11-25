@@ -37,9 +37,9 @@ jobs:
         run: ${{ secrets.KUBE_CONFIG }}
       - name: Modify Manifest
         run: |
-          echo ${{ GITHUB.BASE_REF }}
+          echo $GITHUB_BASE_REF
           export NAME_WITH_TAG=${{ env.IMAGE_NAME }}:${{ GITHUB.SHA }}
-          export BRANCH_NAME=${{ GITHUB.BASE_REF }}
+          export BRANCH_NAME=$GITHUB_BASE_REF
           yq -i '.spec.template.spec.containers[0].image=strenv(NAME_WITH_TAG)' ./manifest/strenv(BRANCH_NAME)/deployment.yaml
       - name: Deploy
-        run: kubectl apply -f ./manifest/${{ GITHUB.BASE_REF }}/.
+        run: kubectl apply -f ./manifest/$GITHUB_BASE_REF/.
