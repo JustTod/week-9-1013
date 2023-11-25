@@ -4,7 +4,7 @@ on:
     branches:
       - dev
 env:
-  IMAGE_TAG: $GITHUB_SHA
+  IMAGE_TAG: $GITHUB.SHA
   IMAGE_NAME: justtod/simple-node-app
 jobs:
   push_to_registry:
@@ -26,7 +26,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/simple-node-app:${{ GITHUB_SHA }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/simple-node-app:${{ GITHUB.SHA }}
   deply_to_k8s:
     name: Deploy to K8S
     runs-on: ubuntu-latest
@@ -38,8 +38,8 @@ jobs:
       - name: Modify Mannifest
         run: |
           echo ${{ env.IMAGE_TAG }}
-          echo ${{ GITHUB_SHA }}
-          export NAME_WITH_TAG=${{ env.IMAGE_NAME }}:${{ GITHUB_SHA }}
+          echo ${{ GITHUB.SHA }}
+          export NAME_WITH_TAG=${{ env.IMAGE_NAME }}:${{ GITHUB.SHA }}
           yq -i '.spec.template.spec.containers[0].image=strenv(NAME_WITH_TAG)' ./manifest/deployment.yaml
       - name: Deploy
         run: kubectl apply -f ./manifest/.
