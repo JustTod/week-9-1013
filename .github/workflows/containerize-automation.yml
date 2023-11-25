@@ -5,7 +5,7 @@ on:
       - dev
 env:
   IMAGE_TAG: $GITHUB_SHA
-  IMAGE_NAME: touchsung/simple-node-app
+  IMAGE_NAME: justtod/simple-node-app
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Registry
@@ -37,7 +37,8 @@ jobs:
         run: ${{ secrets.KUBE_CONFIG }}
       - name: Modify Mannifest
         run: |
-          export NAME_WITH_TAG=${{ env.IMAGE_NAME }}:${{ GITHUB_SHA }}
+          echo ${{ env.IMAGE_TAG }}
+          export NAME_WITH_TAG=${{ env.IMAGE_NAME }}:$GITHUB_SHA
           yq -i '.spec.template.spec.containers[0].image=strenv(NAME_WITH_TAG)' ./manifest/deployment.yaml
       - name: Deploy
         run: kubectl apply -f ./manifest/.
